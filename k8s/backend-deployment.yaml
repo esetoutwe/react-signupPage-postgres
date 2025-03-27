@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+      - name: backend
+        image: backend-image
+        env:
+        - name: DB_HOST
+          value: "postgres"
+        - name: DB_USER
+          value: "myuser"
+        - name: DB_PASSWORD
+          value: "mypassword"
+        - name: JWT_SECRET
+          value: "mysecret"
+        ports:
+        - containerPort: 5001
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend
+spec:
+  selector:
+    app: backend
+  ports:
+  - protocol: TCP
+    port: 5001
+    targetPort: 5001
